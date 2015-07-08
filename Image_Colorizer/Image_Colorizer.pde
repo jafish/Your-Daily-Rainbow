@@ -1,11 +1,10 @@
-PImage photo;
-
 color[] facebookColors;
+final int strokeW = 5;
+final int colorDistance = 3;
 
 void setup() {
   size(900, 900);
   colorMode(HSB, 100, 100, 100);
-  background(50, 100, 100);
   facebookColors = new color[6];
   facebookColors[0] = #FDA094;
   facebookColors[1] = #FDCC93;
@@ -14,20 +13,21 @@ void setup() {
   facebookColors[4] = #91D8FD;
   facebookColors[5] = #CBB0FD;
   
-  photo = loadImage("03.jpg");
-
-  photo.loadPixels();
-  for (int i = 0; i < photo.width; i += 1) {
-    for (int j = 0; j < photo.height; j += 1) {
-      int r = (int)random(6);
-      photo.pixels[i + j*photo.width] = facebookColors[r];
+  strokeWeight(strokeW);
+  
+  int lastColor = 3;
+  for (int i = 0; i < height; i += strokeW) {
+    int c = (int)random(6);
+    if (abs(c - lastColor) < colorDistance) {
+      stroke(facebookColors[c]);
     }
-  } 
-  photo.updatePixels();
+    lastColor = c;
+    
+    line(0,i,width,i);
+  }
 }
 
 void draw() {
-  image(photo, 0, 0);
 }
 
 void keyPressed() {
