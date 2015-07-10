@@ -33,10 +33,11 @@ TColor[] facebookColors;
 float tolerance=0.2;
   
 void setup() {
-  size(900,900);
+  size(1000,1000);
   background(255);
   noStroke();
-  img=loadImage("03.jpg");
+  img=loadImage("Confederate-Flag-Large-Decontrasted.jpg");
+  //img=loadImage("Confederate-Flag-Large.jpg");
   workImg=new PImage(img.width,img.height,ARGB);
   facebookColors = new TColor[6];
   facebookColors[0] = (TColor.WHITE.copy()).setARGB(#FDA094);

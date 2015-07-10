@@ -1,6 +1,6 @@
 color[] facebookColors;
-final int strokeW = 5;
-final int colorDistance = 3;
+final int strokeW = 15;
+final int colorDistance = 4;
 
 void setup() {
   size(900, 900);
