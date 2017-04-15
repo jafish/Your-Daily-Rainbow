@@ -3,7 +3,7 @@ final int colorDistance = 1;
 
 float r = 0;
 float theta = 0;
-float eStart = 1500;
+float eStart = 150;
 float thetaIncrement = 0.01;
 float rIncrement;
 int numLoops = 600;

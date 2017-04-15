@@ -54,8 +54,8 @@ void keyPressed() {
       noLoop();
     } else {
       loop();
-      saveFrame();
     }
+  saveFrame();
 }
 
 void saveFrame() {
