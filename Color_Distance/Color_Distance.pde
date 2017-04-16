@@ -2,7 +2,7 @@
  * creating image based color palettes and color decimation through means
  * of using a histogram.
  */
- 
+
 /* 
  * Copyright (c) 2010 Karsten Schmidt
  * 
@@ -22,23 +22,43 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
- 
+
 import toxi.color.*;
 import toxi.math.*;
 import java.util.Iterator;
+import processing.video.*;
+
+Capture video;
 
 PImage img, workImg;
 TColor[] facebookColors;
 
 float tolerance=0.2;
-  
+
 void setup() {
-  size(1000,1000);
+  size(1000, 1000);
   background(255);
   noStroke();
-  img=loadImage("Confederate-Flag-Large-Decontrasted.jpg");
+  //frameRate(2);
+
+  String[] cameras = Capture.list();
+
+  //if (cameras.length == 0) {
+  //  println("There are no cameras available for capture.");
+  //  exit();
+  //} else {
+  //  println("Available cameras:");
+  //  for (int i = 0; i < cameras.length; i++) {
+  //    println(cameras[i]);
+  //  }
+  //}
+
+  video = new Capture(this);
+  video.start(); 
+
+  //img=loadImage("Confederate-Flag-Large-Decontrasted.jpg");
   //img=loadImage("Confederate-Flag-Large.jpg");
-  workImg=new PImage(img.width,img.height,ARGB);
+  //workImg=new PImage(img.width,img.height,ARGB);
   facebookColors = new TColor[6];
   facebookColors[0] = (TColor.WHITE.copy()).setARGB(#FDA094);
   facebookColors[1] = (TColor.WHITE.copy()).setARGB(#FDCC93);
@@ -46,50 +66,48 @@ void setup() {
   facebookColors[3] = (TColor.WHITE.copy()).setARGB(#A2F4C0);
   facebookColors[4] = (TColor.WHITE.copy()).setARGB(#91D8FD);
   facebookColors[5] = (TColor.WHITE.copy()).setARGB(#CBB0FD);
+}
 
-  // create a color histogram of image, using only 10% of its pixels and the given tolerance
-  //Histogram hist=Histogram.newFromARGBArray(img.pixels, img.pixels.length/10, tolerance, true);
+void draw() {
+  if (video.available() == true) {
+    video.read();
+    video.loadPixels();
 
-  // Create a color histogram using only the six colors from the Facebook pride banner
-  //Histogram hist = Histogram.newFromARGBArray(facebookColors, 6, tolerance, true);
-  
-  // now snap the color of each pixel to the closest color of the histogram palette
-  // (that's really a posterization/quantization effect)
-  TColor col=TColor.WHITE.copy();
-  for(int i=0; i<img.pixels.length; i++) {
-    col.setARGB(img.pixels[i]);
-    TColor closest=col;
-    float minD=100; // If this minimum is set too low, then the original pixel
-    // will stay as it is, which is not what I want. I'm not going for fidelity
-    // to the original image
-    for(int j = 0; j < facebookColors.length; j++) {
-      float d=col.distanceToRGB(facebookColors[j]);
-      if (d<minD) {
-        minD=d;
-        closest=facebookColors[j];
+
+    // The following does the same, and is faster when just drawing the image
+    // without any additional resizing, transformations, or tint.
+    //set(0, 0, video);
+
+    //img=loadImage("Confederate-Flag-Large.jpg");
+    workImg=new PImage(video.width, video.height, ARGB);
+
+
+    TColor whiteColor=TColor.WHITE.copy();
+    
+    for (int i=0; i<video.pixels.length; i++) {
+      whiteColor.setARGB(video.pixels[i]);
+      TColor closest=whiteColor;
+      float minD=100; // If this minimum is set too low, then the original pixel
+      // will stay as it is, which is not what I want. I'm not going for fidelity
+      // to the original image
+      for (int j = 0; j < facebookColors.length; j++) {
+        float d=whiteColor.distanceToRGB(facebookColors[j]);
+        if (d<minD) {
+          minD=d;
+          closest=facebookColors[j];
+        }
       }
+      workImg.pixels[i]=closest.toARGB();
     }
-    workImg.pixels[i]=closest.toARGB();
+    workImg.updatePixels();
+    // display original and posterized images
+    //image(video, 0, 0);
+    image(workImg,0,0);
   }
-  workImg.updatePixels();
-  // display original and posterized images
-  //image(img,0,0);
-  image(workImg,0,0);
-  // display power curve distribution of histogram colors as bar chart
-  float x=0;
-  /*int w=width/hist.getEntries().size();
-  for(Iterator<HistEntry> i=hist.iterator(); i.hasNext() && x<width;) {
-    HistEntry e=i.next();
-    println(e.getColor().toHex()+": "+e.getFrequency());
-    fill(e.getColor().toARGB());
-    float h=e.getFrequency()*height;
-    rect(x,height-h,w,h);
-    x+=w;
-    } */
-  saveFrame();
+  
 }
 
 void saveFrame() {
   //Save each frame to make a movie
-	saveFrame("data/image-####.png");
+  saveFrame("data/image-####.png");
 }
