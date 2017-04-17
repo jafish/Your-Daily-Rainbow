@@ -1,8 +1,9 @@
 // This sketch attempts to create lines that animate along the shape of the rainbow I want to create
 // To do this, we'll use parametric equations and radii
 var capture;
+var captureWidth = captureHeight = 0;
 var angle;
-var angleIncrement = 0.01;
+var angleIncrement = 0.002;
 var rainbowSize;
 
 // Colors for each arc
@@ -19,7 +20,8 @@ function setup() {
 
   angle = PI + angleIncrement;
   noStroke();
-
+  console.log("Capture width is " + captureWidth + ", and height is " + captureHeight);
+  
   // Make the rainbow size proportional to the window
   rainbowSize = width / 16;
   if (width > height) {
@@ -46,14 +48,17 @@ function setup() {
 function draw() {
   background(0, 0, 255);
   translate(width / 2, height / 2);
-
+  //console.log("Capture width is " + capture.width + ", and height is " + capture.height);
+  
   image(capture, 0, 0);
   rect(100, 0, 500, 500);
+  
   // Animate the rainbow, then restart it when I reach the end
   // Draw the arc, starting at 180 degrees and move towards zero
+  
   fill(rC); // Red
   arc(0, 0, rS, rS, PI, angle);
-
+  
   fill(oC); // Orange
   arc(0, 0, oS, oS, PI, angle);
 
@@ -71,7 +76,12 @@ function draw() {
 
   fill(0, 0, 255);
   ellipse(0, 0, cS, cS);
-
+  
+  // Hide the rainbow so that it serves to reveal the image instead
+  // of just sitting over the image
+  fill(255);
+  arc(0, 0, rS, rS, angle, TWO_PI);
+  
   angle += angleIncrement;
   if (angle > TWO_PI) {
     angle = PI;
