@@ -1,4 +1,7 @@
+// Hold the captured screen, and decide what to do if the capture isn't successful
 var capture;
+var captureConfirmed;
+var captureWidth = captureHeight = 0;
 
 // Colors for each part of the rainbow
 var rC, oC, yC, gC, bC, pC;
@@ -17,8 +20,19 @@ var target;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  capture = createCapture(VIDEO);
-  capture.hide();
+  try {
+    capture = createCapture(VIDEO);
+    capture.hide();  
+    captureConfirmed = true;
+  }
+  catch (e) {
+    alert("Your browser does not support image capture, or you did not give permission for the webcam. Seeing the video feed requires this permission. This all happens locally - no video is saved on the server. Only you can see it.");  
+    captureConfirmed = false;
+    captureWidth = 640;
+    captureHeight = 480;
+  }
+  
+  
   imageMode(CENTER);
   rWidth = 0;
   noStroke();
@@ -45,8 +59,13 @@ function setup() {
 function draw() {
   background(backgroundColor);
 
-  var nonCaptureVSpace = (height - capture.height) / 2;
-  var nonCaptureHSpace = (width - capture.width) / 2;
+  if (captureConfirmed) {
+    captureWidth = capture.width;
+    captureHeight = capture.height;
+  }
+  
+  var nonCaptureVSpace = (height - captureHeight) / 2;
+  var nonCaptureHSpace = (width - captureWidth) / 2;
 
   fill(textColor);
   textSize(36);
@@ -73,13 +92,15 @@ function draw() {
   bC = color(145, 216, 253, a);
   pC = color(203, 176, 253, a);
 
-  image(capture, width / 2, height / 2);
+  if (captureConfirmed) {
+    image(capture, width / 2, height / 2); 
+  }
 
-  rX = width / 2 - capture.width / 2;
-  rY = height / 2 - capture.height / 2;
-  rYIncrement = capture.height / 6;
+  rX = width / 2 - captureWidth / 2;
+  rY = height / 2 - captureHeight / 2;
+  rYIncrement = captureHeight / 6;
 
-  target = capture.width;
+  target = captureWidth;
   rWidth += (target - rWidth) * easing;
 
   fill(rC); // Red
