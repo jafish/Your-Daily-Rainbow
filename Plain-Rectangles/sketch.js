@@ -10,7 +10,7 @@ var a = 175;
 // Locations for the rectangles
 var rX, rY, rWidth;
 var rWidthIncrement = 0.1;
-var easing = 0.05;
+var easing = 0.045;
 var target;
 
 function setup() {
@@ -20,10 +20,15 @@ function setup() {
   imageMode(CENTER);
   rWidth = 0;
   noStroke();
+  textFont("Lobster");
 }
 
 function draw() {
   background(0, 0, 255);
+
+  textSize(32);
+  textAlign(CENTER);
+  text("Your Daily Rainbow", width/2, height/16);
   
   // Set the color variables here in draw() so that alpha can be adjusted
   rC = color(253, 160, 148, a);
@@ -32,7 +37,7 @@ function draw() {
   gC = color(162, 244, 192, a);
   bC = color(145, 216, 253, a);
   pC = color(203, 176, 253, a);
-  
+
   image(capture, width / 2, height / 2);
 
   rX = width / 2 - capture.width / 2;
@@ -80,11 +85,27 @@ function keyPressed() {
   if (key === " ") {
     // Reset the rainbow to the left of the capture
     rWidth = 0;
+  } else if (key === "a" || key === "A") {
+    // Try to dynamically create an image based on the fact that the image
+    // is in the center and based on the size of the video feed
+    
+    //capture.save("rainbow", "png");
+    capture.loadPixels();
+    // for (i = 0; i < capture.width; i++) {
+    //   for (j = 0; j < capture.height; j++) {
+    //     if (random(2) > 1) {
+    //       capture.set(i, j, color(random(255), random(255), random(255)));
+    //     }
+    //   }
+    // }
   }
 }
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   // Make the image display size proportional to the window
+}
 
+function mousePressed() {
+  saveCanvas(capture, 'rainbow', 'png');
 }

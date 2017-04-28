@@ -1,7 +1,0 @@
-Key Questions:
-	- Can I achieve a form of masking over the displayed video? And if so, can that masking be animated?
-	- Try setting a rainbow as a background, then putting the video on top with a blend mode.
-	- Can I achieve a form of masking over the displayed video? And if so, can that masking be animated? 
-Archive:
-	- How does video behave differently from images? (even though the `image` function is the one that displays the actual video) @done
-	- Can I get access to the pixels array of a video? @done

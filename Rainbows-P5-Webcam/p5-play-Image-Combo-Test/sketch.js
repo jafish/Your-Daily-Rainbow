@@ -95,13 +95,13 @@ function draw() {
 
   drawSprites(pipes);
   drawSprite(ground);
-  drawSprite(bird);
+  //drawSprite(bird);
   
   push();
   translate(bird.position.x, bird.position.y);
   rotate(radians(bird.rotation));
   capture.mask(birdImg);
-  image(capture, 0, 0, 480, 480, 0, 0, 60, 60);
+  image(capture, 0, 0, 640, 480, 0, 0, 400, 340);
   //image(capture, 0, 0);
   pop();
 }
