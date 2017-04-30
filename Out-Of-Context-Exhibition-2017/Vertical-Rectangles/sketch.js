@@ -13,8 +13,7 @@ var textColor;
 var a = 175;
 
 // Locations for the rectangles
-var rX, rY, rWidth;
-var rWidthIncrement = 0.1;
+var rX, rY, rWidth, rHeight;
 var easing = 0.045;
 var target;
 
@@ -33,7 +32,7 @@ function setup() {
 
 
   imageMode(CENTER);
-  rWidth = 0;
+  rHeight = 0;
   noStroke();
   textFont("Lobster");
 
@@ -97,28 +96,29 @@ function draw() {
 
   rX = width / 2 - captureWidth / 2;
   rY = height / 2 - captureHeight / 2;
-  rYIncrement = captureHeight / 6;
-
-  target = captureWidth;
-  rWidth += (target - rWidth) * easing;
+  rXIncrement = captureWidth / 6;
+  rWidth = rXIncrement;
+  
+  target = captureHeight;
+  rHeight += (target - rHeight) * easing;
 
   fill(rC); // Red
-  rect(rX, rY, rWidth, rYIncrement);
+  rect(rX, rY, rWidth, rHeight);
 
   fill(oC); // Orange
-  rect(rX, rY + rYIncrement * 1, rWidth, rYIncrement);
+  rect(rX + rXIncrement * 1, rY, rWidth, rHeight);
 
   fill(yC); // Yellow
-  rect(rX, rY + rYIncrement * 2, rWidth, rYIncrement);
+  rect(rX + rXIncrement * 2, rY, rWidth, rHeight);
 
   fill(gC); // Green
-  rect(rX, rY + rYIncrement * 3, rWidth, rYIncrement);
+  rect(rX + rXIncrement * 3, rY, rWidth, rHeight);
 
   fill(bC); // Blue
-  rect(rX, rY + rYIncrement * 4, rWidth, rYIncrement);
+  rect(rX + rXIncrement * 4, rY, rWidth, rHeight);
 
   fill(pC); // Purple
-  rect(rX, rY + rYIncrement * 5, rWidth, rYIncrement);
+  rect(rX + rXIncrement * 5, rY, rWidth, rHeight);
 
   // Change alpha value
   if (keyIsPressed) {
@@ -166,5 +166,5 @@ function windowResized() {
 
 function mousePressed() {
   // Reset the rainbow to the left of the capture
-  rWidth = 0;
+  rHeight = 0;
 }
