@@ -22,17 +22,16 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   try {
     capture = createCapture(VIDEO);
-    capture.hide();  
+    capture.hide();
     captureConfirmed = true;
-  }
-  catch (e) {
-    alert("Your browser does not support image capture, or you did not give permission for the webcam. Seeing the video feed requires this permission. This all happens locally - no video is saved on the server. Only you can see it.");  
+  } catch (e) {
+    alert("Your browser does not support image capture (Google Chrome works best), or you did not give permission for the webcam. Seeing the video feed requires this permission. This all happens locally - no video is saved on the server. Only you can see it.");
     captureConfirmed = false;
     captureWidth = 640;
     captureHeight = 480;
   }
-  
-  
+
+
   imageMode(CENTER);
   rWidth = 0;
   noStroke();
@@ -52,7 +51,7 @@ function setup() {
   backgroundColor = colors[rnum];
   rnum += 2;
   rnum = rnum % 6;
-
+  
   textColor = colors[rnum];
 }
 
@@ -63,7 +62,7 @@ function draw() {
     captureWidth = capture.width;
     captureHeight = capture.height;
   }
-  
+
   var nonCaptureVSpace = (height - captureHeight) / 2;
   var nonCaptureHSpace = (width - captureWidth) / 2;
 
@@ -73,9 +72,9 @@ function draw() {
   text("Your Daily Rainbow", width / 2, nonCaptureVSpace - height / 40);
 
   fill(textColor);
-  textSize(16);
+  textSize(20);
   textAlign(CENTER);
-  text("Come back tomorrow for another filter...", width / 2, height - nonCaptureVSpace + height / 40);
+  text("Come back tomorrow for another filter...", width / 2, height - nonCaptureVSpace + height / 32);
 
   fill(textColor);
   textSize(16);
@@ -93,7 +92,7 @@ function draw() {
   pC = color(203, 176, 253, a);
 
   if (captureConfirmed) {
-    image(capture, width / 2, height / 2); 
+    image(capture, width / 2, height / 2);
   }
 
   rX = width / 2 - captureWidth / 2;
