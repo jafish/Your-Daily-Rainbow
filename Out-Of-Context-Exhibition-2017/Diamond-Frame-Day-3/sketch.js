@@ -72,11 +72,6 @@ function draw() {
       captureHeight = capture.height;
       captureComplete = true;
     }
-
-    // Now that the video is the proper size, create the image
-    if (captureComplete) {
-      imageMask = createMaskingImage(captureWidth, captureHeight);
-    }
   }
 
   var nonCaptureVSpace = (height - captureHeight) / 2;
@@ -95,6 +90,7 @@ function draw() {
   fill(textColor);
   textSize(16);
   textAlign(LEFT);
+  text("Refresh for a new background/text color", width - nonCaptureHSpace + 4, height - nonCaptureVSpace - 52);
   text("⬍: Adjust Transparency", width - nonCaptureHSpace + 4, height - nonCaptureVSpace - 36);
   text("Mouse Click: Reset Filter Animation", width - nonCaptureHSpace + 4, height - nonCaptureVSpace - 20);
   text("Spacebar: Save PNG Snapshot", width - nonCaptureHSpace + 4, height - nonCaptureVSpace - 4);
@@ -109,11 +105,6 @@ function draw() {
 
   if (captureConfirmed) {
     image(capture, width / 2, height / 2);
-    
-    // If the image overlay is ready, display it
-    if (imageCreated) {
-      image(imageMask, width / 2, height / 2);
-    }
   }
 
   rX = width / 2 - captureWidth / 2;
@@ -141,7 +132,13 @@ function draw() {
 
   fill(pC); // Purple
   rect(rX + rXIncrement * 5, rY, rWidth, rHeight);
-
+  
+  if (captureComplete) {
+    // Draw the diamond frame
+    if (captureComplete) {
+      drawDiamondFrame(captureWidth, captureHeight);
+    }
+  }
   // Change alpha value
   if (keyIsPressed) {
     if (keyCode === UP_ARROW) {
@@ -175,19 +172,18 @@ function mousePressed() {
   rHeight = 0;
 }
 
-function CreateMaskingImage(w, h) {
-  // Create an image that has an empty circle in the center to use for masking over the video
-  // Assume a perfect circle, centered in the rectangle is what we want
-  var img = createImage(w, h);
-  img.loadPixels();
-  for (i = 0; i < img.width; i++) {
-    for (j = 0; j < img.height; j++) {
-      // If the pixel is inside of the circle, then make it transparent
-      // Otherwise, make it the same color as the background
-      if ()
-        img.set(i, j, backgroundColor);
-    }
-  }
-  img.updatePixels();
-  return img;
+function drawDiamondFrame() {
+  diamondColor = color(red(backgroundColor), green(backgroundColor), blue(backgroundColor), 255);
+  fill(diamondColor);
+  var centerX = width / 2;
+  var centerY = height / 2;
+  var leftX = centerX - captureWidth / 2;
+  var topY = centerY - captureHeight / 2;
+  var bottomY = bottomRightY = centerY + captureHeight / 2;
+  var rightX = centerX + captureWidth / 2;
+
+  triangle(leftX, topY, centerX, topY, leftX, centerY);
+  triangle(centerX, topY, rightX, topY, rightX, centerY);
+  triangle(rightX, centerY, rightX, bottomY, centerX, bottomY);
+  triangle(centerX, bottomY, leftX, bottomY, leftX, centerY);
 }
