@@ -1,6 +1,7 @@
 // Hold the captured screen, and decide what to do if the capture isn't successful
 var capture;
 var captureConfirmed;
+var captureComplete;
 var captureWidth = captureHeight = 0;
 
 // Colors for each part of the rainbow
@@ -17,12 +18,18 @@ var rX, rY, rWidth, rHeight;
 var easing = 0.045;
 var target;
 
+// Image to mask the edges of the video rectangle outside of the circle
+var imageMask;
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  captureComplete = false;
   try {
     capture = createCapture(VIDEO);
     capture.hide();
     captureConfirmed = true;
+    captureWidth = capture.width;
+    captureHeight = capture.height;
   } catch (e) {
     alert("Your browser does not support image capture (Google Chrome works best), or you did not give permission for the webcam. Seeing the video feed requires this permission. This all happens locally - no video is saved on the server. Only you can see it.");
     captureConfirmed = false;
@@ -50,7 +57,7 @@ function setup() {
   backgroundColor = colors[rnum];
   rnum += 2;
   rnum = rnum % 6;
-  
+
   textColor = colors[rnum];
 }
 
@@ -58,8 +65,18 @@ function draw() {
   background(backgroundColor);
 
   if (captureConfirmed) {
-    captureWidth = capture.width;
-    captureHeight = capture.height;
+    // Check to see if the capture has been fully initialized. If it has, then
+    // we can update the capture width/height variables and stop checking
+    if (capture.width != captureWidth) {
+      captureWidth = capture.width;
+      captureHeight = capture.height;
+      captureComplete = true;
+    }
+
+    // Now that the video is the proper size, create the image
+    if (captureComplete) {
+      imageMask = createMaskingImage(captureWidth, captureHeight);
+    }
   }
 
   var nonCaptureVSpace = (height - captureHeight) / 2;
@@ -92,13 +109,18 @@ function draw() {
 
   if (captureConfirmed) {
     image(capture, width / 2, height / 2);
+    
+    // If the image overlay is ready, display it
+    if (imageCreated) {
+      image(imageMask, width / 2, height / 2);
+    }
   }
 
   rX = width / 2 - captureWidth / 2;
   rY = height / 2 - captureHeight / 2;
   rXIncrement = captureWidth / 6;
   rWidth = rXIncrement;
-  
+
   target = captureHeight;
   rHeight += (target - rHeight) * easing;
 
@@ -136,23 +158,6 @@ function draw() {
   }
 }
 
-function keyPressed() {
-  if (key === "a" || key === "A") {
-    // Try to dynamically create an image based on the fact that the image
-    // is in the center and based on the size of the video feed
-
-    //capture.save("rainbow", "png");
-    //capture.loadPixels();
-    // for (i = 0; i < capture.width; i++) {
-    //   for (j = 0; j < capture.height; j++) {
-    //     if (random(2) > 1) {
-    //       capture.set(i, j, color(random(255), random(255), random(255)));
-    //     }
-    //   }
-    // }
-  }
-}
-
 function keyReleased() {
   if (key === " ") {
     saveCanvas(capture, 'rainbow', 'png');
@@ -162,9 +167,27 @@ function keyReleased() {
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   // Make the image display size proportional to the window
+  // TODO: Resize the image that I'm using to mask the video
 }
 
 function mousePressed() {
   // Reset the rainbow to the left of the capture
   rHeight = 0;
+}
+
+function CreateMaskingImage(w, h) {
+  // Create an image that has an empty circle in the center to use for masking over the video
+  // Assume a perfect circle, centered in the rectangle is what we want
+  var img = createImage(w, h);
+  img.loadPixels();
+  for (i = 0; i < img.width; i++) {
+    for (j = 0; j < img.height; j++) {
+      // If the pixel is inside of the circle, then make it transparent
+      // Otherwise, make it the same color as the background
+      if ()
+        img.set(i, j, backgroundColor);
+    }
+  }
+  img.updatePixels();
+  return img;
 }
