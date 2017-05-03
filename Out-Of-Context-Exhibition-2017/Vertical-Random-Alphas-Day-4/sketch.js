@@ -53,7 +53,7 @@ function setup() {
   backgroundColor = colors[rnum];
   rnum += 2;
   rnum = rnum % 6;
-  
+
   textColor = colors[rnum];
 }
 
@@ -101,7 +101,7 @@ function draw() {
   rY = height / 2 - captureHeight / 2;
   rXIncrement = captureWidth / 6;
   rWidth = rXIncrement;
-  
+
   target = captureHeight;
   rHeight += (target - rHeight) * easing;
 
@@ -126,15 +126,18 @@ function draw() {
   // Change alpha value
   if (keyIsPressed) {
     if (keyCode === UP_ARROW) {
-      
-      a++;
-      if (a >= 255) {
-        a = 255;
+      for (var i = 0; i < 6; i++) {
+        a[i]++;
+        if (a[i] >= 255) {
+          a[i] = 255;
+        }
       }
     } else if (keyCode === DOWN_ARROW) {
-      a--;
-      if (a <= 0) {
-        a = 0;
+      for (var i = 0; i < 6; i++) {
+        a[i]--;
+        if (a[i] <= 0) {
+          a[i] = 0;
+        }
       }
     }
   }
