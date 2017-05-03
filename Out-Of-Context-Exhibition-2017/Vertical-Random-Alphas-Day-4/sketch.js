@@ -30,18 +30,23 @@ function setup() {
     captureHeight = 480;
   }
 
+  a = new Array(6);
+  for (var i = 0; i < 6; i++) {
+    a[i] = Math.floor(random(256));
+    console.log(a[i]);
+  }
   imageMode(CENTER);
   rHeight = 0;
   noStroke();
   textFont("Lobster");
 
   // Setup the initial colors and color array
-  rC = color(253, 160, 148, a);
-  oC = color(253, 204, 147, a);
-  yC = color(254, 235, 152, a);
-  gC = color(162, 244, 192, a);
-  bC = color(145, 216, 253, a);
-  pC = color(203, 176, 253, a);
+  rC = color(253, 160, 148, a[0]);
+  oC = color(253, 204, 147, a[1]);
+  yC = color(254, 235, 152, a[2]);
+  gC = color(162, 244, 192, a[3]);
+  bC = color(145, 216, 253, a[4]);
+  pC = color(203, 176, 253, a[5]);
   colors = [rC, oC, yC, gC, bC, pC];
 
   // Get a random color with which to set the background each time
@@ -82,12 +87,12 @@ function draw() {
   text("Spacebar: Save PNG Snapshot", width - nonCaptureHSpace + 4, height - nonCaptureVSpace - 4);
 
   // Set the color variables here in draw() so that alpha can be adjusted
-  rC = color(253, 160, 148, a);
-  oC = color(253, 204, 147, a);
-  yC = color(254, 235, 152, a);
-  gC = color(162, 244, 192, a);
-  bC = color(145, 216, 253, a);
-  pC = color(203, 176, 253, a);
+  rC = color(253, 160, 148, a[0]);
+  oC = color(253, 204, 147, a[1]);
+  yC = color(254, 235, 152, a[2]);
+  gC = color(162, 244, 192, a[3]);
+  bC = color(145, 216, 253, a[4]);
+  pC = color(203, 176, 253, a[5]);
 
   if (captureConfirmed) {
     image(capture, width / 2, height / 2);
