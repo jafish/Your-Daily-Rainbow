@@ -33,7 +33,6 @@ function setup() {
   a = new Array(6);
   for (var i = 0; i < 6; i++) {
     a[i] = Math.floor(random(256));
-    console.log(a[i]);
   }
   imageMode(CENTER);
   rHeight = 0;
@@ -127,6 +126,7 @@ function draw() {
   // Change alpha value
   if (keyIsPressed) {
     if (keyCode === UP_ARROW) {
+      
       a++;
       if (a >= 255) {
         a = 255;
@@ -137,23 +137,6 @@ function draw() {
         a = 0;
       }
     }
-  }
-}
-
-function keyPressed() {
-  if (key === "a" || key === "A") {
-    // Try to dynamically create an image based on the fact that the image
-    // is in the center and based on the size of the video feed
-
-    //capture.save("rainbow", "png");
-    //capture.loadPixels();
-    // for (i = 0; i < capture.width; i++) {
-    //   for (j = 0; j < capture.height; j++) {
-    //     if (random(2) > 1) {
-    //       capture.set(i, j, color(random(255), random(255), random(255)));
-    //     }
-    //   }
-    // }
   }
 }
 
