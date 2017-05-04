@@ -186,25 +186,32 @@ function drawDiamondFrame() {
   var bottomY = bottomRightY = centerY + captureHeight / 2;
   var rightX = centerX + captureWidth / 2;
 
-  // Top-Left corner
+  // Top-left corner
   beginShape();
   vertex(leftX, topY);
   vertex(centerX, topY);
   bezierVertex(centerX - captureWidth/4, topY, leftX, centerY - captureHeight/4, leftX, centerY);
   endShape();
   
-  // Top-Right corner
+  // Top-right corner
   beginShape();
   vertex(rightX, topY);
   vertex(centerX, topY);
   bezierVertex(centerX + captureWidth/4, topY, rightX, centerY - captureHeight/4, rightX, centerY);
   endShape();
   
-  triangle(rightX, centerY, rightX, bottomY, centerX, bottomY);
-  triangle(centerX, bottomY, leftX, bottomY, leftX, centerY);
+  // Bottom-right corner
+  //triangle(rightX, centerY, rightX, bottomY, centerX, bottomY);
+  beginShape();
+  vertex(rightX, bottomY);
+  vertex(rightX, centerY);
+  bezierVertex(rightX, centerY + captureHeight/4, centerX + captureWidth/4, bottomY, centerX, bottomY);
+  endShape();
   
-  //fill(255, 255, 255, 150);
-  
-  // Draw an ellipse at the center for testing purposes
-  //ellipse(centerX, centerY, captureWidth, captureHeight);
+  // Bottom-left corner
+  beginShape();
+  vertex(leftX, bottomY);
+  vertex(leftX, centerY);
+  bezierVertex(leftX, centerY + captureHeight/4, centerX - captureWidth/4, bottomY, centerX, bottomY);
+  endShape();
 }
