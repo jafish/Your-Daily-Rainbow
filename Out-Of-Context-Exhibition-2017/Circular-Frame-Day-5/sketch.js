@@ -1,3 +1,7 @@
+// TODO: Test out a complex shape for one of the corner triangles
+// TODO: Switch back to horizontal stripes
+// TODO: Finish the other three corners
+
 // Hold the captured screen, and decide what to do if the capture isn't successful
 var capture;
 var captureConfirmed;
@@ -37,7 +41,7 @@ function setup() {
     captureHeight = 480;
   }
 
-
+  ellipseMode(CENTER);
   imageMode(CENTER);
   rHeight = 0;
   noStroke();
@@ -182,8 +186,25 @@ function drawDiamondFrame() {
   var bottomY = bottomRightY = centerY + captureHeight / 2;
   var rightX = centerX + captureWidth / 2;
 
-  triangle(leftX, topY, centerX, topY, leftX, centerY);
-  triangle(centerX, topY, rightX, topY, rightX, centerY);
+  // Top-Left corner
+  beginShape();
+  vertex(leftX, topY);
+  vertex(centerX, topY);
+  bezierVertex(centerX - captureWidth/4, topY, leftX, centerY - captureHeight/4, leftX, centerY);
+  endShape();
+  
+  // Top-Right corner
+  beginShape();
+  vertex(rightX, topY);
+  vertex(centerX, topY);
+  bezierVertex(centerX + captureWidth/4, topY, leftX, centerY - captureHeight/4, rightX, centerY);
+  endShape();
+  
   triangle(rightX, centerY, rightX, bottomY, centerX, bottomY);
   triangle(centerX, bottomY, leftX, bottomY, leftX, centerY);
+  
+  //fill(255, 255, 255, 150);
+  
+  // Draw an ellipse at the center for testing purposes
+  //ellipse(centerX, centerY, captureWidth, captureHeight);
 }
