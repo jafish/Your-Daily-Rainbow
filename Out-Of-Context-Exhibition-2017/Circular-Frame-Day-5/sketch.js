@@ -197,7 +197,7 @@ function drawDiamondFrame() {
   beginShape();
   vertex(rightX, topY);
   vertex(centerX, topY);
-  bezierVertex(centerX + captureWidth/4, topY, leftX, centerY - captureHeight/4, rightX, centerY);
+  bezierVertex(centerX + captureWidth/4, topY, rightX, centerY - captureHeight/4, rightX, centerY);
   endShape();
   
   triangle(rightX, centerY, rightX, bottomY, centerX, bottomY);
