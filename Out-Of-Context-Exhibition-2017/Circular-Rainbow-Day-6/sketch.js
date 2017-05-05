@@ -242,3 +242,9 @@ function drawFrame(cW, cH) {
   bezierVertex(leftX, centerY + cH / 4, centerX - cW / 4, bottomY, centerX, bottomY);
   endShape();
 }
+
+function berp(start, end, value) {
+  value = min(value/end, 1.0);
+  value = (sin(value * PI * (0.2 + 2.5 * value * value * value)) * pow(1.0 - value, 2.2) + value) * (1.0 + (1.2 * (1.0 - value)));
+  return start + (end - start) * value;
+} 
