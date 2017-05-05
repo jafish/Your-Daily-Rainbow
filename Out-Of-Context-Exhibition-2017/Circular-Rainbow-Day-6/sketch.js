@@ -16,9 +16,10 @@ var a = 100;
 
 // Locations for the rectangles
 var rX, rY;
-var easing = 0.7;
 var circleTargets;
 var circleWidths;
+var easing = 0.075;
+var circleFixMultiplier = 1.1;
 
 // Counter to count the number of frames that the circles have been growing
 // to create a sort of bounce effect
@@ -64,11 +65,11 @@ function setup() {
   bC = color(145, 216, 253, a);
   pC = color(203, 176, 253, a);
   colors = [rC, oC, yC, gC, bC, pC];
-  
+
   circleWidths = [0, 0, 0, 0, 0, 0];
   circleTargets = [0, 0, 0, 0, 0, 0];
   growthCounter = 0;
-    
+
   // Get a random color with which to set the background each time
   var rnum = Math.floor(random(6));
   backgroundColor = colors[rnum];
@@ -95,9 +96,9 @@ function draw() {
         croppedCaptureWidth = captureWidth;
         croppedCaptureHeight = captureWidth;
       }
-      
+
       for (var i = 0; i < 6; i++) {
-        circleTargets[i] = croppedCaptureWidth - i * croppedCaptureWidth/6;
+        circleTargets[i] = croppedCaptureWidth - i * croppedCaptureWidth / 6;
       }
       growthCounter = 0;
     }
@@ -140,12 +141,12 @@ function draw() {
   rY = height / 2;
   rXIncrement = captureWidth / 6;
   rWidth = rXIncrement;
-  
+
   growthCounter += growthCounterIncrement;
-  for(var i = 0; i < 6; i++) {
+  for (var i = 0; i < 6; i++) {
     // Bounce every circle except the purple one
     if (i == 0) {
-      circleWidths[i] += (circleTargets[i] - circleWidths[i]) * easing; 
+      circleWidths[i] += (circleTargets[i] - circleWidths[i]) * easing;
     } else {
       circleWidths[i] = berp(0.0, circleTargets[i], growthCounter);
     }
@@ -153,28 +154,26 @@ function draw() {
   
   fill(pC); // Purple
   ellipse(rX, rY, circleWidths[0]);
-  
+
   fill(bC); // Blue
   ellipse(rX, rY, circleWidths[1]);
-  
+
   fill(gC); // Green
   ellipse(rX, rY, circleWidths[2]);
-  
+
   fill(yC); // Yellow
   ellipse(rX, rY, circleWidths[3]);
-  
+
   fill(oC); // Orange
   ellipse(rX, rY, circleWidths[4]);
-  
+
   fill(rC); // Red
   ellipse(rX, rY, circleWidths[5]);
 
   if (captureComplete) {
-    // Draw the diamond frame
-    if (captureComplete) {
-      drawFrame(croppedCaptureWidth, croppedCaptureHeight);
-    }
+    drawFrame(croppedCaptureWidth, croppedCaptureHeight);
   }
+
   // Change alpha value
   if (keyIsPressed) {
     if (keyCode === UP_ARROW) {
@@ -199,13 +198,12 @@ function keyReleased() {
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
-  // Make the image display size proportional to the window
-  // TODO: Resize the image that I'm using to mask the video
 }
 
 function mousePressed() {
   // Reset the rainbow
   growthCounter = 0;
+  circleWidths[0] = 0;
 }
 
 function drawFrame(cW, cH) {
@@ -218,43 +216,42 @@ function drawFrame(cW, cH) {
   var rightX = centerX + cW / 2;
 
   fill(cropColor);
-  
+
   // "Crop" right and left rectangles to create square video
-  rect(centerX - captureWidth/2, centerY - captureHeight/2, captureWidth/8, captureHeight);
-  rect(centerX + captureWidth/2 - captureWidth/8, centerY - captureHeight/2, captureWidth/8, captureHeight);
-  
+  rect(centerX - captureWidth / 2, centerY - captureHeight / 2, captureWidth / 8, captureHeight);
+  rect(centerX + captureWidth / 2 - captureWidth / 8, centerY - captureHeight / 2, captureWidth / 8, captureHeight);
+
   // Top-left corner
   beginShape();
   vertex(leftX, topY);
   vertex(centerX, topY);
-  bezierVertex(centerX - cW / 4, topY, leftX, centerY - cH / 4, leftX, centerY);
+  bezierVertex(centerX - circleFixMultiplier*(cW / 4), topY, leftX, centerY - circleFixMultiplier*(cH / 4), leftX, centerY);
   endShape();
 
   // Top-right corner
   beginShape();
   vertex(rightX, topY);
   vertex(centerX, topY);
-  bezierVertex(centerX + cW / 4, topY, rightX, centerY - cH / 4, rightX, centerY);
+  bezierVertex(centerX + circleFixMultiplier*(cW / 4), topY, rightX, centerY - circleFixMultiplier*(cH / 4), rightX, centerY);
   endShape();
 
   // Bottom-right corner
-  //triangle(rightX, centerY, rightX, bottomY, centerX, bottomY);
   beginShape();
   vertex(rightX, bottomY);
   vertex(rightX, centerY);
-  bezierVertex(rightX, centerY + cH / 4, centerX + cW / 4, bottomY, centerX, bottomY);
+  bezierVertex(rightX, centerY + circleFixMultiplier*(cH / 4), centerX + circleFixMultiplier*(cW / 4), bottomY, centerX, bottomY);
   endShape();
 
   // Bottom-left corner
   beginShape();
   vertex(leftX, bottomY);
   vertex(leftX, centerY);
-  bezierVertex(leftX, centerY + cH / 4, centerX - cW / 4, bottomY, centerX, bottomY);
+  bezierVertex(leftX, centerY + circleFixMultiplier*(cH / 4), centerX - circleFixMultiplier*(cW / 4), bottomY, centerX, bottomY);
   endShape();
 }
 
 function berp(start, end, value) {
-  value = min(value/end, 1.0);
+  value = min(value / end, 1.0);
   value = (sin(value * PI * (0.2 + 2.5 * value * value * value)) * pow(1.0 - value, 2.2) + value) * (1.0 + (1.2 * (1.0 - value)));
   return start + (end - start) * value;
 }
