@@ -12,7 +12,7 @@ var backgroundColor;
 var textColor;
 
 // Alpha value for each color
-var a = 100;
+var a = 175;
 
 // Locations for the rectangles
 var rX, rY;
@@ -126,12 +126,12 @@ function draw() {
   text("Spacebar: Save PNG Snapshot", width - nonCaptureHSpace + 4, height - nonCaptureVSpace - 4);
 
   // Set the color variables here in draw() so that alpha can be adjusted
-  rC = color(253, 160, 148, 25);
-  oC = color(253, 204, 147, 35);
-  yC = color(254, 235, 152, 55);
-  gC = color(162, 244, 192, 85);
-  bC = color(145, 216, 253, 125);
-  pC = color(203, 176, 253, 175);
+  rC = color(253, 160, 148, a-150);
+  oC = color(253, 204, 147, a-140);
+  yC = color(254, 235, 152, a-120);
+  gC = color(162, 244, 192, a-90);
+  bC = color(145, 216, 253, a-50);
+  pC = color(203, 176, 253, a);
 
   if (captureConfirmed) {
     image(capture, width / 2, height / 2);
@@ -183,8 +183,8 @@ function draw() {
       }
     } else if (keyCode === DOWN_ARROW) {
       a--;
-      if (a <= 0) {
-        a = 0;
+      if (a <= 150) {
+        a = 150;
       }
     }
   }
