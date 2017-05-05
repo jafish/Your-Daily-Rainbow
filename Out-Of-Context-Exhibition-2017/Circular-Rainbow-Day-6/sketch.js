@@ -1,12 +1,9 @@
-// TODO: Test out a complex shape for one of the corner triangles
-// TODO: Switch back to horizontal stripes
-// TODO: Finish the other three corners
-
 // Hold the captured screen, and decide what to do if the capture isn't successful
 var capture;
 var captureConfirmed;
 var captureComplete;
 var captureWidth = captureHeight = 0;
+var croppedCaptureWidth = croppedCaptureHeight = 0;
 
 // Colors for each part of the rainbow
 var rC, oC, yC, gC, bC, pC;
@@ -34,11 +31,20 @@ function setup() {
     captureConfirmed = true;
     captureWidth = capture.width;
     captureHeight = capture.height;
+    if (captureWidth > captureHeight) {
+      croppedCaptureHeight = captureHeight;
+      croppedCaptureWidth = captureHeight;
+    } else {
+      croppedCaptureWidth = captureWidth;
+      croppedCaptureHeight = captureWidth;
+    }
   } catch (e) {
     alert("Your browser does not support image capture (Google Chrome works best), or you did not give permission for the webcam. Seeing the video feed requires this permission. This all happens locally - no video is saved on the server. Only you can see it.");
     captureConfirmed = false;
     captureWidth = 640;
     captureHeight = 480;
+    croppedCaptureHeight = captureHeight;
+    croppedCaptureWidth = captureHeight;
   }
 
   ellipseMode(CENTER);
@@ -68,13 +74,20 @@ function setup() {
 function draw() {
   background(backgroundColor);
 
-  if (captureConfirmed) {
+  if (captureConfirmed && !captureComplete) {
     // Check to see if the capture has been fully initialized. If it has, then
     // we can update the capture width/height variables and stop checking
     if (capture.width != captureWidth) {
       captureWidth = capture.width;
       captureHeight = capture.height;
       captureComplete = true;
+      if (captureWidth > captureHeight) {
+        croppedCaptureHeight = captureHeight;
+        croppedCaptureWidth = captureHeight;
+      } else {
+        croppedCaptureWidth = captureWidth;
+        croppedCaptureHeight = captureWidth;
+      }
     }
   }
 
@@ -136,11 +149,11 @@ function draw() {
 
   fill(pC); // Purple
   rect(rX + rXIncrement * 5, rY, rWidth, rHeight);
-  
+
   if (captureComplete) {
     // Draw the diamond frame
     if (captureComplete) {
-      drawDiamondFrame(captureWidth, captureHeight);
+      drawDiamondFrame(croppedCaptureWidth, croppedCaptureHeight);
     }
   }
   // Change alpha value
@@ -176,42 +189,42 @@ function mousePressed() {
   rHeight = 0;
 }
 
-function drawDiamondFrame() {
+function drawDiamondFrame(cW, cH) {
   diamondColor = color(red(backgroundColor), green(backgroundColor), blue(backgroundColor), 255);
   fill(diamondColor);
   var centerX = width / 2;
   var centerY = height / 2;
-  var leftX = centerX - captureWidth / 2;
-  var topY = centerY - captureHeight / 2;
-  var bottomY = bottomRightY = centerY + captureHeight / 2;
-  var rightX = centerX + captureWidth / 2;
+  var leftX = centerX - cW / 2;
+  var topY = centerY - cH / 2;
+  var bottomY = bottomRightY = centerY + cH / 2;
+  var rightX = centerX + cW / 2;
 
   // Top-left corner
   beginShape();
   vertex(leftX, topY);
   vertex(centerX, topY);
-  bezierVertex(centerX - captureWidth/4, topY, leftX, centerY - captureHeight/4, leftX, centerY);
+  bezierVertex(centerX - cW / 4, topY, leftX, centerY - cH / 4, leftX, centerY);
   endShape();
-  
+
   // Top-right corner
   beginShape();
   vertex(rightX, topY);
   vertex(centerX, topY);
-  bezierVertex(centerX + captureWidth/4, topY, rightX, centerY - captureHeight/4, rightX, centerY);
+  bezierVertex(centerX + cW / 4, topY, rightX, centerY - cH / 4, rightX, centerY);
   endShape();
-  
+
   // Bottom-right corner
   //triangle(rightX, centerY, rightX, bottomY, centerX, bottomY);
   beginShape();
   vertex(rightX, bottomY);
   vertex(rightX, centerY);
-  bezierVertex(rightX, centerY + captureHeight/4, centerX + captureWidth/4, bottomY, centerX, bottomY);
+  bezierVertex(rightX, centerY + cH / 4, centerX + cW / 4, bottomY, centerX, bottomY);
   endShape();
-  
+
   // Bottom-left corner
   beginShape();
   vertex(leftX, bottomY);
   vertex(leftX, centerY);
-  bezierVertex(leftX, centerY + captureHeight/4, centerX - captureWidth/4, bottomY, centerX, bottomY);
+  bezierVertex(leftX, centerY + cH / 4, centerX - cW / 4, bottomY, centerX, bottomY);
   endShape();
 }
