@@ -15,9 +15,10 @@ var textColor;
 var a = 100;
 
 // Locations for the rectangles
-var rX, rY, rWidth, rHeight;
+var rX, rY;
 var easing = 0.045;
-var target;
+var circleTargets;
+var circleWidths;
 
 // Image to mask the edges of the video rectangle outside of the circle
 var imageMask;
@@ -61,7 +62,10 @@ function setup() {
   bC = color(145, 216, 253, a);
   pC = color(203, 176, 253, a);
   colors = [rC, oC, yC, gC, bC, pC];
-
+  
+  circleWidths = [0, 0, 0, 0, 0, 0];
+  circleTargets = [0, 0, 0, 0, 0, 0];
+  
   // Get a random color with which to set the background each time
   var rnum = Math.floor(random(6));
   backgroundColor = colors[rnum];
@@ -87,6 +91,10 @@ function draw() {
       } else {
         croppedCaptureWidth = captureWidth;
         croppedCaptureHeight = captureWidth;
+      }
+      
+      for (var i = 0; i < 6; i++) {
+        circleTargets[i] = croppedCaptureWidth - i * croppedCaptureWidth/6;
       }
     }
   }
@@ -129,26 +137,27 @@ function draw() {
   rXIncrement = captureWidth / 6;
   rWidth = rXIncrement;
   
-  //target = captureHeight;
-  //rHeight += (target - rHeight) * easing;
+  for(var i = 0; i < 6; i++) {
+    circleWidths[i] += (circleTargets[i] - circleWidths[i]) * easing; 
+  }
   
   fill(pC); // Purple
-  ellipse(rX, rY, 480);
+  ellipse(rX, rY, circleWidths[0]);
   
   fill(bC); // Blue
-  ellipse(rX, rY, 400);
+  ellipse(rX, rY, circleWidths[1]);
   
   fill(gC); // Green
-  ellipse(rX, rY, 320);
+  ellipse(rX, rY, circleWidths[2]);
   
   fill(yC); // Yellow
-  ellipse(rX, rY, 240);
+  ellipse(rX, rY, circleWidths[3]);
   
   fill(oC); // Orange
-  ellipse(rX, rY, 160);
+  ellipse(rX, rY, circleWidths[4]);
   
   fill(rC); // Red
-  ellipse(rX, rY, 80);
+  ellipse(rX, rY, circleWidths[5]);
 
   if (captureComplete) {
     // Draw the diamond frame
