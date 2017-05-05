@@ -12,7 +12,7 @@ var backgroundColor;
 var textColor;
 
 // Alpha value for each color
-var a = 175;
+var a = 100;
 
 // Locations for the rectangles
 var rX, rY, rWidth, rHeight;
@@ -113,47 +113,47 @@ function draw() {
   text("Spacebar: Save PNG Snapshot", width - nonCaptureHSpace + 4, height - nonCaptureVSpace - 4);
 
   // Set the color variables here in draw() so that alpha can be adjusted
-  rC = color(253, 160, 148, a);
-  oC = color(253, 204, 147, a);
-  yC = color(254, 235, 152, a);
-  gC = color(162, 244, 192, a);
-  bC = color(145, 216, 253, a);
-  pC = color(203, 176, 253, a);
+  rC = color(253, 160, 148, 25);
+  oC = color(253, 204, 147, 35);
+  yC = color(254, 235, 152, 55);
+  gC = color(162, 244, 192, 85);
+  bC = color(145, 216, 253, 125);
+  pC = color(203, 176, 253, 175);
 
   if (captureConfirmed) {
     image(capture, width / 2, height / 2);
   }
 
-  rX = width / 2 - captureWidth / 2;
-  rY = height / 2 - captureHeight / 2;
+  rX = width / 2;
+  rY = height / 2;
   rXIncrement = captureWidth / 6;
   rWidth = rXIncrement;
-
-  target = captureHeight;
-  rHeight += (target - rHeight) * easing;
-
-  fill(rC); // Red
-  rect(rX, rY, rWidth, rHeight);
-
-  fill(oC); // Orange
-  rect(rX + rXIncrement * 1, rY, rWidth, rHeight);
-
-  fill(yC); // Yellow
-  rect(rX + rXIncrement * 2, rY, rWidth, rHeight);
-
-  fill(gC); // Green
-  rect(rX + rXIncrement * 3, rY, rWidth, rHeight);
-
-  fill(bC); // Blue
-  rect(rX + rXIncrement * 4, rY, rWidth, rHeight);
-
+  
+  //target = captureHeight;
+  //rHeight += (target - rHeight) * easing;
+  
   fill(pC); // Purple
-  rect(rX + rXIncrement * 5, rY, rWidth, rHeight);
+  ellipse(rX, rY, 480);
+  
+  fill(bC); // Blue
+  ellipse(rX, rY, 400);
+  
+  fill(gC); // Green
+  ellipse(rX, rY, 320);
+  
+  fill(yC); // Yellow
+  ellipse(rX, rY, 240);
+  
+  fill(oC); // Orange
+  ellipse(rX, rY, 160);
+  
+  fill(rC); // Red
+  ellipse(rX, rY, 80);
 
   if (captureComplete) {
     // Draw the diamond frame
     if (captureComplete) {
-      drawDiamondFrame(croppedCaptureWidth, croppedCaptureHeight);
+      drawFrame(croppedCaptureWidth, croppedCaptureHeight);
     }
   }
   // Change alpha value
@@ -189,7 +189,7 @@ function mousePressed() {
   rHeight = 0;
 }
 
-function drawDiamondFrame(cW, cH) {
+function drawFrame(cW, cH) {
   diamondColor = color(red(backgroundColor), green(backgroundColor), blue(backgroundColor), 255);
   fill(diamondColor);
   var centerX = width / 2;
