@@ -190,8 +190,7 @@ function mousePressed() {
 }
 
 function drawFrame(cW, cH) {
-  diamondColor = color(red(backgroundColor), green(backgroundColor), blue(backgroundColor), 255);
-  fill(diamondColor);
+  cropColor = color(red(backgroundColor), green(backgroundColor), blue(backgroundColor), 255);
   var centerX = width / 2;
   var centerY = height / 2;
   var leftX = centerX - cW / 2;
@@ -199,6 +198,12 @@ function drawFrame(cW, cH) {
   var bottomY = bottomRightY = centerY + cH / 2;
   var rightX = centerX + cW / 2;
 
+  fill(cropColor);
+  
+  // "Crop" right and left rectangles to create square video
+  rect(centerX - captureWidth/2, centerY - captureHeight/2, captureWidth/8, captureHeight);
+  rect(centerX + captureWidth/2 - captureWidth/8, centerY - captureHeight/2, captureWidth/8, captureHeight);
+  
   // Top-left corner
   beginShape();
   vertex(leftX, topY);
