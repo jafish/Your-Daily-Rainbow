@@ -16,12 +16,14 @@ var a = 100;
 
 // Locations for the rectangles
 var rX, rY;
-var easing = 0.045;
+var easing = 0.7;
 var circleTargets;
 var circleWidths;
 
-// Image to mask the edges of the video rectangle outside of the circle
-var imageMask;
+// Counter to count the number of frames that the circles have been growing
+// to create a sort of bounce effect
+var growthCounter;
+var growthCounterIncrement = 5;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -65,7 +67,8 @@ function setup() {
   
   circleWidths = [0, 0, 0, 0, 0, 0];
   circleTargets = [0, 0, 0, 0, 0, 0];
-  
+  growthCounter = 0;
+    
   // Get a random color with which to set the background each time
   var rnum = Math.floor(random(6));
   backgroundColor = colors[rnum];
@@ -96,6 +99,7 @@ function draw() {
       for (var i = 0; i < 6; i++) {
         circleTargets[i] = croppedCaptureWidth - i * croppedCaptureWidth/6;
       }
+      growthCounter = 0;
     }
   }
 
@@ -137,8 +141,14 @@ function draw() {
   rXIncrement = captureWidth / 6;
   rWidth = rXIncrement;
   
+  growthCounter += growthCounterIncrement;
   for(var i = 0; i < 6; i++) {
-    circleWidths[i] += (circleTargets[i] - circleWidths[i]) * easing; 
+    // Bounce every circle except the purple one
+    if (i == 0) {
+      circleWidths[i] += (circleTargets[i] - circleWidths[i]) * easing; 
+    } else {
+      circleWidths[i] = berp(0.0, circleTargets[i], growthCounter);
+    }
   }
   
   fill(pC); // Purple
@@ -194,8 +204,8 @@ function windowResized() {
 }
 
 function mousePressed() {
-  // Reset the rainbow to the left of the capture
-  rHeight = 0;
+  // Reset the rainbow
+  growthCounter = 0;
 }
 
 function drawFrame(cW, cH) {
@@ -247,4 +257,4 @@ function berp(start, end, value) {
   value = min(value/end, 1.0);
   value = (sin(value * PI * (0.2 + 2.5 * value * value * value)) * pow(1.0 - value, 2.2) + value) * (1.0 + (1.2 * (1.0 - value)));
   return start + (end - start) * value;
-} 
+}
